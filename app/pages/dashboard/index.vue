@@ -6,7 +6,7 @@ import { computed } from "vue";
 const router = useRouter();
 const authClient = useAuthClient();
 
-const { data: session, isPending } = await authClient.useSession(useFetch);
+const { data: session } = await authClient.useSession(useFetch);
 
 const isLoggedIn = computed(() => !!session.value?.user);
 const userName = computed(() => session.value?.user?.name ?? "Pengguna");
@@ -37,7 +37,9 @@ function logout() {
     <template v-else>
       <p>
         Silakan
-        <NuxtLink to="/login" class="text-blue-600 underline">login</NuxtLink>
+        <NuxtLink to="/auth/login" class="text-blue-600 underline"
+          >login</NuxtLink
+        >
         terlebih dahulu.
       </p>
     </template>

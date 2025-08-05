@@ -23,7 +23,7 @@ function logout() {
 
 definePageMeta({
   title: "Dashboard",
-  middleware: "auth",
+  // middleware: "auth",
   layout: "sidebar",
   meta: [
     {

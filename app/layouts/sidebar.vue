@@ -35,6 +35,9 @@ async function logout() {
 
   try {
     await authClient.signOut({
+      query: {
+        redirectTo: "/auth/login",
+      },
       fetchOptions: {
         onSuccess: () => {
           navigateTo("/auth/login");
@@ -46,10 +49,6 @@ async function logout() {
     isLoggingOut.value = false;
   }
 }
-
-definePageMeta({
-  middleware: "auth",
-});
 </script>
 
 <template>

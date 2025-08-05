@@ -63,6 +63,10 @@ async function login() {
     isLoading.value = false;
   }
 }
+definePageMeta({
+  layout: "default",
+  // middleware: "guest",
+});
 </script>
 
 <template>

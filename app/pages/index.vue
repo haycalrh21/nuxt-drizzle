@@ -1,100 +1,135 @@
+<!-- pages/index.vue -->
 <template>
-  <div class="space-y-10">
-    <!-- Form Tambah Post -->
-    <form
-      @submit.prevent="submitPost"
-      class="space-y-4 bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 border dark:border-gray-700"
-    >
-      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
-        Tambah Post
-      </h2>
-      <input
-        v-model="title"
-        type="text"
-        placeholder="Judul"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring focus:border-blue-400"
-      />
-      <textarea
-        v-model="content"
-        placeholder="Konten"
-        rows="4"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white focus:outline-none focus:ring focus:border-blue-400"
-      ></textarea>
-      <button
-        type="submit"
-        class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-      >
-        Simpan
-      </button>
-    </form>
+  <div>
+    <!-- Hero Section -->
+    <Hero />
 
-    <!-- List Posts -->
-    <div class="space-y-4">
-      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
-        Daftar Post
-      </h2>
-      <div
-        v-for="post in posts"
-        :key="post.id"
-        class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow border dark:border-gray-700 hover:shadow-md transition"
-      >
-        <div class="flex items-start justify-between mb-2">
-          <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-            {{ post.title }}
-          </h3>
-          <span class="text-sm text-gray-500 dark:text-gray-400">
-            {{ formatDate(post.createdAt) }}
-          </span>
+    <!-- Content Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-900">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+          >
+            Why Choose Us?
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            We deliver exceptional results with cutting-edge technology and
+            proven expertise.
+          </p>
         </div>
-        <p class="text-gray-700 dark:text-gray-200 whitespace-pre-line">
-          {{ post.content }}
-        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div
+            class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
+          >
+            <div
+              class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              Lightning Fast
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              Optimized performance with modern technologies for blazing fast
+              loading times.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div
+            class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
+          >
+            <div
+              class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-6 h-6 text-purple-600 dark:text-purple-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              User Friendly
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              Intuitive design that puts user experience first with clean,
+              modern interfaces.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div
+            class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
+          >
+            <div
+              class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-6 h-6 text-green-600 dark:text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              Reliable
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              Built with robust architecture and best practices for maximum
+              reliability.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from "vue";
-
-const title = ref("");
-const content = ref("");
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-}
-
-const posts = ref<Post[]>([]);
-
-const fetchPosts = async () => {
-  posts.value = await $fetch("/api/posts/get");
-};
-
-async function submitPost() {
-  if (!title.value.trim()) return;
-
-  await $fetch("/api/posts/create", {
-    method: "POST",
-    body: {
-      title: title.value,
-      content: content.value,
+<script setup>
+// Page meta
+useHead({
+  title: "Home - YourCompany",
+  meta: [
+    {
+      name: "description",
+      content: "Build amazing digital products with modern technology.",
     },
-  });
-
-  title.value = "";
-  content.value = "";
-  await fetchPosts();
-}
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleString("id-ID", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
-
-onMounted(fetchPosts);
+  ],
+});
 </script>

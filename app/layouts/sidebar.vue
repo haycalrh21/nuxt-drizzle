@@ -6,6 +6,7 @@ import { useAuthClient } from "~/composables/useAuth";
 const route = useRoute();
 const authClient = useAuthClient();
 const sidebarOpen = ref(false);
+const isLoggingOut = ref(false);
 
 // Get page title from route meta or default
 const pageTitle = computed(() => {
@@ -15,6 +16,7 @@ const pageTitle = computed(() => {
 // Check if user is logged in for logout button
 const { data: session } = await authClient.useSession(useFetch);
 const userName = computed(() => session.value?.user?.name ?? "Pengguna");
+const email = computed(() => session.value?.user?.email ?? "Tidak diketahui");
 
 const isLoggedIn = computed(() => !!session.value?.user);
 
@@ -26,15 +28,28 @@ function closeSidebar() {
   sidebarOpen.value = false;
 }
 
-function logout() {
-  authClient.signOut({
-    fetchOptions: {
-      onSuccess: () => {
-        navigateTo("/auth/login");
+async function logout() {
+  if (isLoggingOut.value) return;
+
+  isLoggingOut.value = true;
+
+  try {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          navigateTo("/auth/login");
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+    isLoggingOut.value = false;
+  }
 }
+
+definePageMeta({
+  middleware: "auth",
+});
 </script>
 
 <template>
@@ -57,7 +72,6 @@ function logout() {
     >
       <div class="flex flex-col w-64 h-full">
         <!-- Sidebar Header -->
-
         <div
           class="flex items-center justify-between h-16 px-4 border-b border-gray-700 flex-shrink-0"
         >
@@ -65,26 +79,13 @@ function logout() {
 
           <button
             @click="closeSidebar"
-            class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-200 hover:bg-gray-700"
+            class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-200 hover:bg-gray-700 transition-colors"
           >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
+            <Icon name="heroicons:x-mark" class="w-5 h-5" />
           </button>
         </div>
 
         <!-- Navigation -->
-
         <nav class="flex-1 mt-2 px-4 overflow-y-auto">
           <ul class="space-y-2">
             <li>
@@ -94,25 +95,10 @@ function logout() {
                 active-class="bg-blue-600 text-white"
                 @click="closeSidebar"
               >
-                <svg
+                <Icon
+                  name="heroicons:squares-2x2"
                   class="w-5 h-5 mr-3 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                  ></path>
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"
-                  ></path>
-                </svg>
+                />
                 <span class="truncate">Dashboard</span>
               </NuxtLink>
             </li>
@@ -123,19 +109,10 @@ function logout() {
                 active-class="bg-blue-600 text-white"
                 @click="closeSidebar"
               >
-                <svg
+                <Icon
+                  name="heroicons:user"
                   class="w-5 h-5 mr-3 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  ></path>
-                </svg>
+                />
                 <span class="truncate">Profil</span>
               </NuxtLink>
             </li>
@@ -146,25 +123,10 @@ function logout() {
                 active-class="bg-blue-600 text-white"
                 @click="closeSidebar"
               >
-                <svg
+                <Icon
+                  name="heroicons:cog-6-tooth"
                   class="w-5 h-5 mr-3 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  ></path>
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  ></path>
-                </svg>
+                />
                 <span class="truncate">Pengaturan</span>
               </NuxtLink>
             </li>
@@ -175,45 +137,58 @@ function logout() {
                 active-class="bg-blue-600 text-white"
                 @click="closeSidebar"
               >
-                <svg
+                <Icon
+                  name="heroicons:home"
                   class="w-5 h-5 mr-3 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  ></path>
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  ></path>
-                </svg>
+                />
                 <span class="truncate">Home</span>
               </NuxtLink>
             </li>
           </ul>
         </nav>
 
-        <!-- Footer area (optional) -->
+        <!-- Footer area -->
         <div class="flex-shrink-0 p-4 border-t border-gray-700">
-          <h1 class="text-sm font-semibold text-white mb-4 inline-block">
-            Welcome back ,
-            <span>
-              {{ userName }}
-            </span>
-          </h1>
+          <div class="mb-4">
+            <p class="text-sm font-semibold text-white">Welcome back,</p>
+            <p class="text-sm text-gray-300 truncate">{{ userName }}</p>
+            <p class="text-xs text-gray-400 truncate">{{ email }}</p>
+          </div>
+
           <button
             v-if="isLoggedIn"
             @click="logout"
-            class="bg-red-500 hover:bg-red-600 text-white mx-auto py-2 px-20 rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
+            :disabled="isLoggingOut"
+            class="relative w-full bg-red-500 hover:bg-red-600 disabled:bg-red-400 text-white py-2 px-4 rounded-lg transition-all duration-200 text-sm flex items-center justify-center overflow-hidden group"
           >
-            Logout
+            <!-- Loading Spinner -->
+            <div
+              v-if="isLoggingOut"
+              class="absolute inset-0 flex items-center justify-center bg-red-500"
+            >
+              <Icon name="heroicons:arrow-path" class="w-4 h-4 animate-spin" />
+              <span class="ml-2">Keluar...</span>
+            </div>
+
+            <!-- Normal State -->
+            <span
+              :class="{
+                'opacity-0': isLoggingOut,
+                'opacity-100': !isLoggingOut,
+              }"
+              class="flex items-center transition-opacity"
+            >
+              <Icon
+                name="heroicons:arrow-right-on-rectangle"
+                class="w-4 h-4 mr-2"
+              />
+              Logout
+            </span>
+
+            <!-- Hover Effect -->
+            <div
+              class="absolute inset-0 bg-red-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 -z-10"
+            ></div>
           </button>
         </div>
       </div>
@@ -231,21 +206,9 @@ function logout() {
             <!-- Mobile menu button -->
             <button
               @click="toggleSidebar"
-              class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-200 hover:bg-gray-700 mr-2"
+              class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-200 hover:bg-gray-700 mr-2 transition-colors"
             >
-              <svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>
-              </svg>
+              <Icon name="heroicons:bars-3" class="w-6 h-6" />
             </button>
 
             <!-- Page title -->
@@ -258,15 +221,6 @@ function logout() {
           <div class="flex items-center space-x-2 sm:space-x-4">
             <!-- Custom actions slot -->
             <slot name="header-actions" />
-
-            <!-- Default logout button -->
-            <!-- <button
-              v-if="isLoggedIn"
-              @click="logout"
-              class="bg-red-500 hover:bg-red-600 text-white py-2 px-3 sm:px-4 rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
-            >
-              Logout
-            </button> -->
           </div>
         </div>
       </header>
@@ -278,3 +232,20 @@ function logout() {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Custom animation for logout button */
+@keyframes pulse-red {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-pulse-red {
+  animation: pulse-red 2s infinite;
+}
+</style>

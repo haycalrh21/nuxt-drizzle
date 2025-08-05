@@ -1,4 +1,4 @@
-import { db } from "../../../database/drizzle.config";
+import { db } from "~~/drizzle.config";
 import { posts } from "../../../database/schema";
 import { desc } from "drizzle-orm"; // ⬅ WAJIB ada
 

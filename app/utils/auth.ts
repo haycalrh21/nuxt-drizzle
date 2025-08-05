@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import type { User } from "better-auth";
+import type { User, BetterAuthPlugin } from "better-auth";
 
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/plugins";
@@ -39,3 +39,35 @@ export const auth = betterAuth({
     // usePlural: true,
   }),
 });
+const myPlugin = () => {
+  return {
+    id: "my-plugin",
+    hooks: {
+      before: [
+        {
+          matcher: (context: any) => {
+            return context.headers.get("x-my-header") === "my-value";
+          },
+          handler: createAuthMiddleware(async (ctx) => {
+            //do something before the request
+            return {
+              context: ctx, // if you want to modify the context
+            };
+          }),
+        },
+      ],
+      after: [
+        {
+          matcher: (context: any) => {
+            return context.path === "/sign-up/email";
+          },
+          handler: createAuthMiddleware(async (ctx) => {
+            return ctx.json({
+              message: "Hello World",
+            }); // if you want to modify the response
+          }),
+        },
+      ],
+    },
+  } satisfies BetterAuthPlugin;
+};

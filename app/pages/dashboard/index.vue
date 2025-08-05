@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { useAuthClient } from "~/composables/useAuth";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
 
 const router = useRouter();
 const authClient = useAuthClient();
-
-const { data: session } = await authClient.useSession(useFetch);
-
-const isLoggedIn = computed(() => !!session.value?.user);
-const userName = computed(() => session.value?.user?.name ?? "Pengguna");
 
 function logout() {
   authClient.signOut({
@@ -24,7 +18,7 @@ function logout() {
 definePageMeta({
   title: "Dashboard",
   // middleware: "auth",
-  layout: "sidebar",
+  layout: "dashboard-sidebar",
   meta: [
     {
       name: "description",
@@ -37,14 +31,11 @@ definePageMeta({
 <template>
   <!-- Konten utama -->
   <div class="w-full max-w-7xl mx-auto">
-    <div v-if="isLoggedIn" class="space-y-6">
+    <div class="space-y-6">
       <!-- Welcome Card -->
       <div
         class="bg-gray-800 rounded-lg shadow-sm border border-gray-700 p-4 sm:p-6"
       >
-        <h2 class="text-xl sm:text-2xl font-bold text-white mb-2">
-          Selamat datang, {{ userName }}!
-        </h2>
         <p class="text-sm sm:text-base text-gray-300">
           Ini adalah halaman dashboard Anda. Gunakan menu di sebelah kiri untuk
           navigasi.

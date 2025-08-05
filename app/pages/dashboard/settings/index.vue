@@ -35,21 +35,5 @@ definePageMeta({
 </script>
 
 <template>
-  <!-- Konten utama -->
-  <div class="w-full max-w-7xl mx-auto">
-    <div v-if="isLoggedIn" class="space-y-6">
-      <!-- update name -->
-      <div
-        class="bg-gray-800 rounded-lg text-white shadow-sm border border-gray-700 p-4 sm:p-6"
-      >
-        <h1>Update Name</h1>
-      </div>
-      <!-- update password -->
-      <div
-        class="bg-gray-800 rounded-lg text-white shadow-sm border border-gray-700 p-4 sm:p-6"
-      >
-        <h1>Update Password</h1>
-      </div>
-    </div>
-  </div>
+  <div><h1>settings</h1></div>
 </template>

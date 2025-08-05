@@ -121,13 +121,7 @@ const socialLinks = [
   { name: "GitHub", icon: "mdi:github", url: "https://github.com" },
 ];
 
-const quickLinks = [
-  { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
-  { name: "Services", path: "/services" },
-  { name: "Contact", path: "/contact" },
-  { name: "Blog", path: "/blog" },
-];
+const quickLinks = [{ name: "Home", path: "/" }];
 
 const contactInfo = [
   { type: "email", icon: "heroicons:envelope", value: "hello@yourcompany.com" },
@@ -135,9 +129,5 @@ const contactInfo = [
   { type: "location", icon: "heroicons:map-pin", value: "Jakarta, Indonesia" },
 ];
 
-const legalLinks = [
-  { name: "Privacy Policy", path: "/privacy" },
-  { name: "Terms of Service", path: "/terms" },
-  { name: "Cookie Policy", path: "/cookies" },
-];
+const legalLinks = [];
 </script>

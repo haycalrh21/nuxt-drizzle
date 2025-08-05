@@ -9,8 +9,6 @@ const isLoggingOut = ref(false);
 
 const session = authClient.useSession();
 
-const pageTitle = computed(() => route.meta?.title || "Dashboard");
-
 function toggleSidebar() {
   sidebarOpen.value = !sidebarOpen.value;
 }
@@ -25,10 +23,9 @@ async function logout() {
 
   try {
     await authClient.signOut({
-      query: { redirectTo: "/auth/login" },
       fetchOptions: {
         onSuccess: () => {
-          navigateTo("/auth/login");
+          window.location.href = "/auth/login";
         },
       },
     });

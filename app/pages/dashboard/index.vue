@@ -17,7 +17,7 @@ function logout() {
 
 definePageMeta({
   title: "Dashboard",
-  // middleware: "auth",
+  middleware: ["auth"],
   layout: "dashboard-sidebar",
   meta: [
     {

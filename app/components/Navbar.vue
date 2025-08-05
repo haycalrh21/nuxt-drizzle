@@ -24,19 +24,6 @@
           </NuxtLink>
 
           <!-- Dark Mode Toggle -->
-          <button
-            @click="toggleDarkMode"
-            class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200 hover:scale-105"
-            :aria-label="
-              isDark ? 'Switch to light mode' : 'Switch to dark mode'
-            "
-          >
-            <Icon
-              :name="isDark ? 'heroicons:sun' : 'heroicons:moon'"
-              class="w-5 h-5 transition-transform duration-200"
-              :class="{ 'rotate-12': isDark }"
-            />
-          </button>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -109,12 +96,7 @@ const isDark = ref(false);
 const isMobileMenuOpen = ref(false);
 
 // Navigation links
-const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
-  { name: "Services", path: "/services" },
-  { name: "Contact", path: "/contact" },
-];
+const navLinks = [{ name: "Home", path: "/" }];
 
 // Methods
 const toggleDarkMode = () => {

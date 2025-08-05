@@ -16,19 +16,7 @@ export const auth = betterAuth({
     },
   },
   user: {},
-  hooks: {
-    after: createAuthMiddleware(async (ctx) => {
-      if (ctx.path === "/get-session") {
-        if (!ctx.context.session) {
-          return ctx.json({
-            session: null,
-            user: null,
-          });
-        }
-        return ctx.json(ctx.context.session);
-      }
-    }),
-  },
+
   emailAndPassword: {
     enabled: true,
   },
@@ -39,35 +27,3 @@ export const auth = betterAuth({
     // usePlural: true,
   }),
 });
-const myPlugin = () => {
-  return {
-    id: "my-plugin",
-    hooks: {
-      before: [
-        {
-          matcher: (context: any) => {
-            return context.headers.get("x-my-header") === "my-value";
-          },
-          handler: createAuthMiddleware(async (ctx) => {
-            //do something before the request
-            return {
-              context: ctx, // if you want to modify the context
-            };
-          }),
-        },
-      ],
-      after: [
-        {
-          matcher: (context: any) => {
-            return context.path === "/sign-up/email";
-          },
-          handler: createAuthMiddleware(async (ctx) => {
-            return ctx.json({
-              message: "Hello World",
-            }); // if you want to modify the response
-          }),
-        },
-      ],
-    },
-  } satisfies BetterAuthPlugin;
-};

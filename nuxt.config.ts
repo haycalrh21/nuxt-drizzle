@@ -7,5 +7,5 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ["@nuxt/image", "@nuxt/scripts", "@nuxt/icon", "@nuxt/test-utils"],
+  modules: ["@nuxt/image", "@nuxt/ui"],
 });

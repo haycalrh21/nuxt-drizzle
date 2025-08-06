@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useAuthClient } from "~/composables/useAuth";
 
 const auth = useAuthClient();
+const toast = useToast();
 const name = ref("");
 const email = ref("");
 const password = ref("");
@@ -23,9 +24,18 @@ async function register() {
     });
 
     if (res.error) {
-      error.value = res.error.message ?? "Terjadi kesalahan saat daftar";
+      toast.add({
+        title: "Registration failed",
+        description: res.error.message ?? "Registration failed",
+        icon: "heroicons:exclamation-circle",
+      });
       isLoading.value = false;
     } else {
+      toast.add({
+        title: "Registration successful",
+        description: "Please login to continue.",
+        icon: "heroicons:check-circle",
+      });
       navigateTo("/auth/login");
     }
   } catch (err) {

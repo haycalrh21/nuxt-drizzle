@@ -9,16 +9,11 @@ export type UserWithId = Omit<User, "id"> & {
   id: number;
 };
 export const auth = betterAuth({
-  session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60,
-    },
-  },
-  user: {},
+  user: { changeEmail: { enabled: true } },
 
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false,
   },
   database: drizzleAdapter(db, {
     provider: "pg",

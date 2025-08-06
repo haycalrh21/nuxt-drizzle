@@ -4,13 +4,12 @@ import {
   serial,
   text,
   timestamp,
-  integer,
+  varchar,
   boolean,
 } from "drizzle-orm/pg-core";
 
-import { createId } from "@paralleldrive/cuid2";
-
 export const posts = pgTable("posts", {
+  user_id: varchar("user_id").notNull(),
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   content: text("content"),

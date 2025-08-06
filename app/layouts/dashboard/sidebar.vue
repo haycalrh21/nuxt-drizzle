@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue"; // ✅ TAMBAH onMounted & watch
 import { useRoute } from "vue-router";
 import { authClient } from "@/lib/auth-client";
 
@@ -8,6 +8,31 @@ const sidebarOpen = ref(false);
 const isLoggingOut = ref(false);
 
 const session = authClient.useSession();
+
+// Fix bagian ini di sidebar:
+const userName = ref(session.value?.data?.user?.name || "-");
+
+// ✅ WATCH SESSION CHANGES BIAR GA ILANG PAS REFRESH
+watch(
+  () => session.value?.data?.user?.name,
+  (newName) => {
+    if (newName) {
+      userName.value = newName;
+    }
+  },
+  { immediate: true }
+);
+
+onMounted(() => {
+  // Set initial value pas mount
+  if (session.value?.data?.user?.name) {
+    userName.value = session.value.data.user.name;
+  }
+
+  window.addEventListener("nameUpdated", (e: any) => {
+    userName.value = e.detail; // ✅ SIMPLE UPDATE
+  });
+});
 
 function toggleSidebar() {
   sidebarOpen.value = !sidebarOpen.value;
@@ -64,7 +89,7 @@ async function logout() {
             @click="closeSidebar"
             class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-200 hover:bg-gray-700 transition-colors"
           >
-            <Icon name="heroicons:x-mark" class="w-5 h-5" />
+            <UIcon name="heroicons:x-mark" class="w-5 h-5" />
           </button>
         </div>
 
@@ -84,6 +109,11 @@ async function logout() {
                   label: 'Profil',
                 },
                 {
+                  to: '/dashboard/posts',
+                  icon: 'heroicons:document-text',
+                  label: 'Posts',
+                },
+                {
                   to: '/dashboard/settings',
                   icon: 'heroicons:cog-6-tooth',
                   label: 'Pengaturan',
@@ -98,7 +128,8 @@ async function logout() {
                 active-class="bg-blue-600 text-white"
                 @click="closeSidebar"
               >
-                <Icon :name="item.icon" class="w-5 h-5 mr-3 flex-shrink-0" />
+                <UIcon :name="item.icon" class="w-5 h-5 mr-3 flex-shrink-0" />
+
                 <span class="truncate">{{ item.label }}</span>
               </NuxtLink>
             </li>
@@ -110,7 +141,7 @@ async function logout() {
           <div class="mb-4">
             <p class="text-sm font-semibold text-white">Welcome back,</p>
             <p class="text-sm text-gray-300 truncate">
-              {{ session?.data?.user.name || "-" }}
+              {{ userName }}
             </p>
             <p class="text-xs text-gray-400 truncate">
               {{ session?.data?.user.email || "-" }}
@@ -126,7 +157,8 @@ async function logout() {
               v-if="isLoggingOut"
               class="absolute inset-0 flex items-center justify-center bg-red-500"
             >
-              <Icon name="heroicons:arrow-path" class="w-4 h-4 animate-spin" />
+              <UIcon name="heroicons:arrow-path" class="w-5 h-5 animate-spin" />
+
               <span class="ml-2">Keluar...</span>
             </div>
 
@@ -137,7 +169,7 @@ async function logout() {
               }"
               class="flex items-center transition-opacity"
             >
-              <Icon
+              <UIcon
                 name="heroicons:arrow-right-on-rectangle"
                 class="w-4 h-4 mr-2"
               />
@@ -160,7 +192,7 @@ async function logout() {
           @click="toggleSidebar"
           class="p-2 rounded-md text-gray-400 hover:text-gray-200 hover:bg-gray-700 transition-colors"
         >
-          <Icon name="heroicons:bars-3" class="w-6 h-6" />
+          <UIcon name="heroicons:bars-3" class="w-6 h-6" />
         </button>
       </div>
 

@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useAuthClient } from "~/composables/useAuth";
 import { authClient } from "~/lib/auth-client";
-
+const toast = useToast();
 const email = ref("");
 const password = ref("");
 const error = ref("");
@@ -19,9 +19,7 @@ onMounted(async () => {
   try {
     // Refresh session untuk memastikan data terbaru
     await auth.getSession();
-  } catch (err) {
-    console.log("Session check failed:", err);
-  }
+  } catch (err) {}
 });
 
 async function login() {
@@ -38,7 +36,10 @@ async function login() {
     });
 
     if (res.error) {
-      error.value = res.error.message ?? "Login gagal";
+      toast.add({
+        title: "Login failed",
+        description: "Please check your email and password.",
+      });
       isLoading.value = false;
       return;
     }
@@ -47,7 +48,11 @@ async function login() {
     await auth.getSession({
       fetchOptions: {
         onSuccess: () => {
-          // Biarkan middleware yang handle redirect
+          toast.add({
+            title: "Login successful",
+            description: "Welcome back!",
+            icon: "heroicons:exclamation-circle",
+          });
           navigateTo("/dashboard");
         },
       },
